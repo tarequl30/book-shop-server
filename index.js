@@ -16,14 +16,20 @@ const uri = "mongodb+srv://heroShop:heroShop79@cluster0.5gken.mongodb.net/heroSh
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
   const collection = client.db("heroShop").collection("books");
-  const orders = client.db("heroShop").collection("orders")
+  const ordersCollection = client.db("heroShop").collection("orders")
 
   app.get('/books', ( req,res ) => {
       collection.find()
       .toArray((err, items) => {
         res.send(items)
-        console.log(items)
       })
+  })
+
+  app.get("/getOrder", (req, res) => {
+    ordersCollection.find()
+    .toArray((err, docs) => {
+      res.send(docs)
+    })
   })
 
   app.post('/addBooks', (req, res) => {
@@ -36,6 +42,10 @@ client.connect(err => {
 
   app.post("/takeOrder", (req, res) => {
     const order = req.body
+    ordersCollection.insertOne(order)
+    .then(result => {
+      res.send(result.insertedCount> 0)
+    })
     console.log(order)
   })
 
