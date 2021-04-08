@@ -51,11 +51,20 @@ client.connect(err => {
 
   app.delete("/deleteBook/:id", (req, res) => {
     const key = req.params.id
-    collection.deleteOne({_id: objectId(key)})
+    Collection.deleteOne({_id: objectId(key)})
     .then(result => {
       res.send(result.deletedCount > 0)
     })
   })
+  
+  app.delete("/deleteOrderBook/:id", (req, res) => {
+    const key = req.params.id
+    ordersCollection.deleteOne({_id: objectId(key)})
+    .then(result => {
+      res.send(result.deletedCount > 0)
+    })
+  })
+
 });
 
 app.get('/', (req, res) => {
